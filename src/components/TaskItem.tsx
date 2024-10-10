@@ -7,7 +7,8 @@ type TaskItemProps = {
 };
 
 export const TaskItem: React.FC<TaskItemProps> = ({ task, onCheck }) => {
-	const { id, title, description, completed } = task;
+	const { id, title, description, completed, category, color } = task;
+
 	return (
 		<ListItem
 			sx={{
@@ -20,6 +21,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, onCheck }) => {
         0px 1px 8px rgba(0, 0, 0, 0.12)
       `,
 				height: "64px",
+				backgroundColor: color,
 			}}
 		>
 			<ListItemIcon sx={{ justifyContent: "center" }}>
@@ -28,12 +30,15 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, onCheck }) => {
 					color="primary"
 					size="medium"
 					checked={completed}
-					// disableRipple
 					onChange={() => onCheck(id)}
 					inputProps={{ "aria-labelledby": title }}
 				/>
 			</ListItemIcon>
-			<ListItemText id={id} primary={title} secondary={description} />
+			<ListItemText
+				id={id}
+				primary={`${category ? category + ": " : ""}${title}`}
+				secondary={description}
+			/>
 		</ListItem>
 	);
 };

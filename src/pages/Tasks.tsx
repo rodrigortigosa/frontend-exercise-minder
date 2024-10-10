@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import { Task } from "../types/Task";
+import { Category } from "../types/Category";
 import { Box, Stack, Typography } from "@mui/material";
 import { ListTasks } from "../components/ListTasks";
 import { getTasks } from "../services/tasks";
+import { getCategories } from "../services/categories";
 
 const Tasks = () => {
 	const [tasks, setTasks] = useState<Task[]>([]);
 	const [pendingTasks, setPendingTasks] = useState<Task[]>([]);
 	const [finishedTasks, setFinishedTasks] = useState<Task[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
+	const [categories, setCategories] = useState<Category[]>([]);
 
 	const handleCheck = (id: string) => {
 		const newTasks = tasks.map((task) => {
@@ -22,7 +25,6 @@ const Tasks = () => {
 
 	useEffect(() => {
 		const fetchTasks = async () => {
-			setLoading(true);
 			try {
 				const fetchedTasks: Task[] = await getTasks();
 				setTasks(fetchedTasks);
@@ -32,11 +34,26 @@ const Tasks = () => {
 				} else {
 					console.error("Error desconocido: ", error);
 				}
-			} finally {
-				setLoading(false);
 			}
 		};
-		fetchTasks();
+
+		const fetchCategories = async () => {
+			try {
+				const fetchedCategories: Category[] = await getCategories();
+				setCategories(fetchedCategories);
+			} catch (error) {
+				if (error instanceof Error) {
+					console.error("Error al obtener las tareas: ", error.message);
+				} else {
+					console.error("Error desconocido: ", error);
+				}
+			}
+		};
+
+		setLoading(true);
+		fetchTasks()
+			.then(() => fetchCategories())
+			.finally(() => setLoading(false));
 	}, []);
 
 	useEffect(() => {
@@ -44,12 +61,20 @@ const Tasks = () => {
 		const filteredFinishedTasks: Task[] = [];
 
 		tasks.forEach((task) => {
-			if (task.completed) filteredFinishedTasks.push(task);
-			else filteredPendingTasks.push(task);
+			const category =
+				categories.find((category) => category.id === task.category_id) || null;
+			const newTask = {
+				...task,
+				category: category?.name || null,
+				color: category?.color || "#FFF",
+			};
+			if (newTask.completed) {
+				filteredFinishedTasks.push(newTask);
+			} else filteredPendingTasks.push(newTask);
 		});
 		setFinishedTasks(filteredFinishedTasks);
 		setPendingTasks(filteredPendingTasks);
-	}, [tasks]);
+	}, [tasks, categories]);
 
 	return (
 		<main>
