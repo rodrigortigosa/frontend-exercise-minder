@@ -9,7 +9,6 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
 	const { id, title, description, completed } = task;
 	return (
 		<ListItem
-			key={id}
 			sx={{
 				p: "10px",
 				gap: "10px",
@@ -19,6 +18,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
         0px 3px 4px rgba(0, 0, 0, 0.14),
         0px 1px 8px rgba(0, 0, 0, 0.12)
       `,
+				height: "64px",
 			}}
 		>
 			<ListItemIcon sx={{ justifyContent: "center" }}>
@@ -31,7 +31,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
 					inputProps={{ "aria-labelledby": title }}
 				/>
 			</ListItemIcon>
-			<ListItemText id={title} primary={title} secondary={description} />
+			<ListItemText id={id} primary={title} secondary={description} />
 		</ListItem>
 	);
 };

@@ -1,8 +1,8 @@
 import { Box, Typography } from "@mui/material";
-import { TaskItem } from "../components/TaskItem";
-import { task } from "../mocks/task";
+import { tasks } from "../mocks/tasks";
+import { ListTasks } from "../components/ListTasks";
 
-const taskMock = task;
+const tasksMock = tasks;
 
 const Tasks = () => {
 	return (
@@ -11,7 +11,7 @@ const Tasks = () => {
 				<Typography variant="h3" style={{ paddingBottom: "17px" }}>
 					Lista de tareas
 				</Typography>
-				<TaskItem task={taskMock} />
+				<ListTasks tasks={tasksMock} />
 			</Box>
 		</main>
 	);
