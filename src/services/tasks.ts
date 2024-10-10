@@ -6,6 +6,11 @@ export const getTasks = async () => {
   const url = `${baseUrl}/tasks`;
   try {
     const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error("Error al obtener las tareas");
+    }
+
     return response.json();
   }  catch (error: unknown) {
     return Promise.reject(error);
