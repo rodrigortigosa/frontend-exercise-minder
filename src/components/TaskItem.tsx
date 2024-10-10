@@ -13,7 +13,6 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, onCheck }) => {
 		<ListItem
 			sx={{
 				p: "10px",
-				gap: "10px",
 				borderRadius: "4px",
 				boxShadow: `
         0px 3px 3px rgba(0, 0, 0, 0.20),
