@@ -3,7 +3,7 @@ import { Task } from "../types/Task";
 import { Category } from "../types/Category";
 import { Box, Stack, Typography } from "@mui/material";
 import { ListTasks } from "../components/ListTasks";
-import { getTasks } from "../services/tasks";
+import { getTasks, updateTask } from "../services/tasks";
 import { getCategories } from "../services/categories";
 
 const Tasks = () => {
@@ -12,15 +12,23 @@ const Tasks = () => {
 	const [finishedTasks, setFinishedTasks] = useState<Task[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [categories, setCategories] = useState<Category[]>([]);
+	const [updateTasks, setUpdateTasks] = useState<boolean>(false);
 
 	const handleCheck = (id: string) => {
-		const newTasks = tasks.map((task) => {
-			if (task.id === id) {
-				task.completed = !task.completed;
+		const task = tasks.find((task) => task.id === id);
+		if (task) {
+			const updatedTask = { ...task, completed: !task.completed };
+			try {
+				updateTask(updatedTask);
+				setUpdateTasks(!updateTasks);
+			} catch (error) {
+				if (error instanceof Error) {
+					console.error("Error al obtener las tareas: ", error.message);
+				} else {
+					console.error("Error desconocido: ", error);
+				}
 			}
-			return task;
-		});
-		setTasks(newTasks);
+		}
 	};
 
 	useEffect(() => {
@@ -54,7 +62,7 @@ const Tasks = () => {
 		fetchTasks()
 			.then(() => fetchCategories())
 			.finally(() => setLoading(false));
-	}, []);
+	}, [updateTasks]);
 
 	useEffect(() => {
 		const filteredPendingTasks: Task[] = [];
