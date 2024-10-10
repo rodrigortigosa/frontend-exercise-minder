@@ -3,9 +3,10 @@ import { Task } from "../types/Task";
 
 type TaskItemProps = {
 	task: Task;
+	onCheck: (id: string) => void;
 };
 
-export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
+export const TaskItem: React.FC<TaskItemProps> = ({ task, onCheck }) => {
 	const { id, title, description, completed } = task;
 	return (
 		<ListItem
@@ -28,6 +29,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
 					size="medium"
 					checked={completed}
 					// disableRipple
+					onChange={() => onCheck(id)}
 					inputProps={{ "aria-labelledby": title }}
 				/>
 			</ListItemIcon>

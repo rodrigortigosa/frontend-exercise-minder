@@ -7,8 +7,19 @@ import { ListTasks } from "../components/ListTasks";
 const tasksMock = tasks;
 
 const Tasks = () => {
+	const [tasks, setTasks] = useState<Task[]>(tasksMock);
 	const [pendingTasks, setPendingTasks] = useState<Task[]>([]);
 	const [finishedTasks, setFinishedTasks] = useState<Task[]>([]);
+
+	const handleCheck = (id: string) => {
+		const newTasks = tasks.map((task) => {
+			if (task.id === id) {
+				task.completed = !task.completed;
+			}
+			return task;
+		});
+		setTasks(newTasks);
+	};
 
 	useEffect(() => {
 		const filteredPendingTasks: Task[] = [];
@@ -20,7 +31,7 @@ const Tasks = () => {
 		});
 		setFinishedTasks(filteredFinishedTasks);
 		setPendingTasks(filteredPendingTasks);
-	}, []);
+	}, [tasks]);
 
 	return (
 		<main>
@@ -30,12 +41,20 @@ const Tasks = () => {
 				</Typography>
 				<Stack sx={{ gap: "32px", my: "10px" }}>
 					{pendingTasks.length > 0 ? (
-						<ListTasks title={"Pendientes"} tasks={pendingTasks} />
+						<ListTasks
+							title="Pendientes"
+							tasks={pendingTasks}
+							onCheck={handleCheck}
+						/>
 					) : (
 						<p>No hay tareas pendientes</p>
 					)}
 					{finishedTasks.length > 0 ? (
-						<ListTasks title="Terminadas" tasks={finishedTasks} />
+						<ListTasks
+							title="Terminadas"
+							tasks={finishedTasks}
+							onCheck={handleCheck}
+						/>
 					) : (
 						<p>No hay tareas terminadas</p>
 					)}
