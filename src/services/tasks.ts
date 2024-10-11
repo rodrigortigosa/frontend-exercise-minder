@@ -17,6 +17,26 @@ export const getTasks = async () => {
   }
 };
 
+export const createTask = async (task: Omit<Task, "color" | "category">) => {
+  const url = `${baseUrl}/tasks`;
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(task)
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al crear la nueva tarea");
+    }
+    return response.json();
+  } catch (error: unknown) {
+    return Promise.reject(error);
+  }
+};
+
 export const updateTask = async (task : Task) => {
   const {id, title, description, category_id, completed} = task;
   const url = `${baseUrl}/tasks/${id}`;

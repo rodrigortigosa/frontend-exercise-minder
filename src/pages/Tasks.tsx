@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Task } from "../types/Task";
 import { Category } from "../types/Category";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Fab, Stack, Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import { ListTasks } from "../components/ListTasks";
-import { getTasks, updateTask } from "../services/tasks";
+import AddTaskModal from "../components/AddTaskModal";
+import { createTask, getTasks, updateTask } from "../services/tasks";
 import { getCategories } from "../services/categories";
 
 const Tasks = () => {
@@ -13,6 +15,15 @@ const Tasks = () => {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [updateTasks, setUpdateTasks] = useState<boolean>(false);
+	const [open, setOpen] = useState<boolean>(false);
+
+	const handleClickOpen = () => {
+		setOpen(true);
+	};
+
+	const handleClose = () => {
+		setOpen(false);
+	};
 
 	const handleCheck = (id: string) => {
 		const task = tasks.find((task) => task.id === id);
@@ -27,6 +38,19 @@ const Tasks = () => {
 				} else {
 					console.error("Error desconocido: ", error);
 				}
+			}
+		}
+	};
+
+	const handleAdd = (task: Omit<Task, "color" | "category">) => {
+		try {
+			createTask(task);
+			setUpdateTasks(!updateTasks);
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error("Error al crear la tarea: ", error.message);
+			} else {
+				console.error("Error desconocido: ", error);
 			}
 		}
 	};
@@ -116,7 +140,24 @@ const Tasks = () => {
 						)}
 					</Stack>
 				)}
+				<Box sx={{ display: "grid", height: "20vh" }}>
+					<Fab
+						color="primary"
+						size="large"
+						aria-label="add"
+						sx={{ justifySelf: "end", alignSelf: "end" }}
+						onClick={handleClickOpen}
+					>
+						<AddIcon />
+					</Fab>
+				</Box>
 			</Box>
+			<AddTaskModal
+				open={open}
+				onClose={handleClose}
+				categories={categories}
+				onAdd={handleAdd}
+			/>
 		</main>
 	);
 };
