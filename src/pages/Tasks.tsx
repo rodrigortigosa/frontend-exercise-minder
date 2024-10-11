@@ -120,23 +120,19 @@ const Tasks = () => {
 					</Box>
 				) : (
 					<Stack sx={{ gap: "32px", my: "10px" }}>
-						{pendingTasks.length > 0 ? (
+						{pendingTasks.length > 0 && (
 							<ListTasks
 								title="Pendientes"
 								tasks={pendingTasks}
 								onCheck={handleCheck}
 							/>
-						) : (
-							<p>No hay tareas pendientes</p>
 						)}
-						{finishedTasks.length > 0 ? (
+						{finishedTasks.length > 0 && (
 							<ListTasks
 								title="Terminadas"
 								tasks={finishedTasks}
 								onCheck={handleCheck}
 							/>
-						) : (
-							<p>No hay tareas terminadas</p>
 						)}
 					</Stack>
 				)}
